@@ -16,7 +16,25 @@ const anthropic = new Anthropic({
 });
 
 // 1. WHATSAPP WEBHOOK VERIFICATION (Required by Meta to link your server)
+// 1. WHATSAPP WEBHOOK VERIFICATION (Strict plain text validation)
 app.get('/webhook', (req, res) => {
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  // Compares secret token from Meta with the one in your environment variables
+  if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN) {
+    console.log('Webhook verified successfully!');
+    
+    // Explicitly strip away any JSON wrappers or extra quotation marks
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).end(challenge); 
+  } else {
+    return res.sendStatus(403);
+  }
+});
+
+/*app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
@@ -28,7 +46,7 @@ app.get('/webhook', (req, res) => {
   } else {
     return res.sendStatus(403);
   }
-});
+});*/
 
 // 2. RECEIVE WHATSAPP MESSAGES & REPLY WITH CLAUDE
 app.post('/webhook', async (req, res) => {
