@@ -17,7 +17,31 @@ const anthropic = new Anthropic({
 
 // 1. WHATSAPP WEBHOOK VERIFICATION (Required by Meta to link your server)
 // 1. WHATSAPP WEBHOOK VERIFICATION (Strict plain text validation)
+
+// 1. WHATSAPP WEBHOOK VERIFICATION (Adaptive Parameter Extraction)
 app.get('/webhook', (req, res) => {
+  // Destructure query attributes cleanly
+  const mode = req.query['hub.mode'] || req.query?.hub?.mode;
+  const token = req.query['hub.verify_token'] || req.query?.hub?.verify_token;
+  const challenge = req.query['hub.challenge'] || req.query?.hub?.challenge;
+
+  console.log('--- Incoming Webhook Verification Attempt ---');
+  console.log('Extracted Mode:', mode);
+  console.log('Extracted Token:', token);
+  console.log('Expected Token from Env:', process.env.WHATSAPP_VERIFY_TOKEN);
+  console.log('Extracted Challenge:', challenge);
+
+  if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN) {
+    console.log('🚀 Verification match successful!');
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send(challenge);
+  } else {
+    console.log('❌ Handshake failed: Token mismatch or invalid structure.');
+    return res.sendStatus(403);
+  }
+});
+
+/*app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
@@ -32,7 +56,7 @@ app.get('/webhook', (req, res) => {
   } else {
     return res.sendStatus(403);
   }
-});
+});*/
 
 /*app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
