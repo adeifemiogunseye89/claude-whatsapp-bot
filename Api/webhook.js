@@ -1,4 +1,4 @@
-import express from 'express';
+/*import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 // To this correct version:
@@ -13,13 +13,13 @@ app.use(cors());
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-});
+});*/
 
 // 1. WHATSAPP WEBHOOK VERIFICATION (Required by Meta to link your server)
 // 1. WHATSAPP WEBHOOK VERIFICATION (Strict plain text validation)
 
 // 1. WHATSAPP WEBHOOK VERIFICATION (Adaptive Parameter Extraction)
-app.get('/webhook', (req, res) => {
+/*app.get('/webhook', (req, res) => {
   // Destructure query attributes cleanly
   const mode = req.query['hub.mode'] || req.query?.hub?.mode;
   const token = req.query['hub.verify_token'] || req.query?.hub?.verify_token;
@@ -39,10 +39,10 @@ app.get('/webhook', (req, res) => {
     console.log('❌ Handshake failed: Token mismatch or invalid structure.');
     return res.sendStatus(403);
   }
-});
+});*/
 
 // 2. RECEIVE WHATSAPP MESSAGES & REPLY WITH CLAUDE
-app.post('/webhook', async (req, res) => {
+/*app.post('/webhook', async (req, res) => {
   try {
     const body = req.body;
 
@@ -94,6 +94,6 @@ async function sendWhatsAppMessage(recipient, text) {
 }
 
 const PORT = process.env.PORT || 3000;
-export default app;
+export default app;*/
 
 //app.listen(PORT, () => console.log(`Server globally listening on port ${PORT}`));
